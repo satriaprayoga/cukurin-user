@@ -22,7 +22,7 @@
         "log_save_name": "log",
         "log_file_ext": "log",
         "time_format": 20060102,
-        "issuer": "PropertyFramework",
+        "issuer": "CukurinApp2023",
         "url_forgot_password":"http://localhost:8084"
     },
     "database":{
@@ -38,7 +38,7 @@
         "host":"127.0.0.1",
         "port":6379,
         "db":0,
-        "key":"ka_email",
+        "key":"cuks_email",
         "password":""
     }
 

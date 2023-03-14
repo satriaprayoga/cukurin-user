@@ -8,9 +8,9 @@ import (
 )
 
 type auditLog struct {
-	ID        int64     `bson:"id"`
-	CreatedAt time.Time `bson:"created_at"`
-	UpdatedAt time.Time `bson:"updated_at"`
+	ID        int64     `json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 	Level     string    `json:"level"`
 	UUID      string    `json:"uuid"`
 	FuncName  string    `json:"func_name"`
@@ -24,6 +24,6 @@ func (a *auditLog) saveAudit() {
 
 	a.ID = utils.GetTimeNow().Unix()
 	a.Message = "API User : " + a.Message
-	fmt.Printf("Inserted a single document: %v", a.Message)
+	fmt.Printf("Calling the Logs: %v", a.Message)
 
 }
