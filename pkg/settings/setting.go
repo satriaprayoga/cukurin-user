@@ -63,7 +63,7 @@ var AppConfigSetting = &FileConfig{}
 
 func Setup() {
 	now := time.Now()
-	viper.SetConfigFile(`../config/config.json`)
+	viper.SetConfigFile(`./config/config.json`)
 	err := viper.ReadInConfig()
 	if err != nil {
 		log.Fatalf("Fail to parse 'config.json': %v", err)

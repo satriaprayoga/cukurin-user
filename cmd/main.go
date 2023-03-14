@@ -1,14 +1,16 @@
 package main
 
 import (
+	"github.com/satriaprayoga/cukurin-user/pkg/database"
+	"github.com/satriaprayoga/cukurin-user/pkg/logging"
 	"github.com/satriaprayoga/cukurin-user/pkg/settings"
 )
 
 func init() {
 	settings.Setup()
-	// database.Setup()
+	database.Setup()
 	// redisdb.Setup()
-	// logging.Setup()
+	logging.Setup()
 }
 
 func main() {
