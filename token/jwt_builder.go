@@ -2,7 +2,6 @@ package token
 
 import (
 	"errors"
-	"time"
 
 	"github.com/golang-jwt/jwt"
 )
@@ -15,8 +14,8 @@ func NewJWTMaker(secret string) TokenBuilder {
 	return &JWTBuilder{secret: secret}
 }
 
-func (builder *JWTBuilder) CreateToken(UserID string, Username string, UserType string, duration time.Duration) (string, error) {
-	payload, err := NewPayload(UserID, Username, UserType, duration)
+func (builder *JWTBuilder) CreateToken(UserID string, Username string, UserType string) (string, error) {
+	payload, err := NewPayload(UserID, Username, UserType)
 	if err != nil {
 		return "", err
 	}
