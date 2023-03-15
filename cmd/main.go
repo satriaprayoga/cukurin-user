@@ -1,19 +1,30 @@
 package main
 
 import (
-	"github.com/satriaprayoga/cukurin-user/pkg/database"
+	"fmt"
+
 	"github.com/satriaprayoga/cukurin-user/pkg/logging"
 	"github.com/satriaprayoga/cukurin-user/pkg/settings"
+	"github.com/satriaprayoga/cukurin-user/pkg/utils"
+	"github.com/satriaprayoga/cukurin-user/token"
 )
 
 func init() {
-	settings.Setup()
-	database.Setup()
+	settings.Setup("./config/config.json")
+	//database.Setup()
 	// redisdb.Setup()
 	logging.Setup()
 }
 
 func main() {
+	settings.Setup("./config/config.json")
+
+	token_builder := token.NewJWTBuilder(settings.AppConfigSetting.App.JwtSecret)
+	t, _ := token_builder.CreateToken(utils.GenerateString(5), utils.RandomUserName(), "user")
+	fmt.Println(t)
+
+	p, _ := token_builder.VerifyToken(t)
+	fmt.Printf("%v", p)
 
 	// e := echo.New()
 	// e.Use(middleware.Logger())

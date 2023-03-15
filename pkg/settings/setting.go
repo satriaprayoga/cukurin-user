@@ -61,9 +61,9 @@ type FileConfig struct {
 
 var AppConfigSetting = &FileConfig{}
 
-func Setup() {
+func Setup(configFile string) {
 	now := time.Now()
-	viper.SetConfigFile(`./config/config.json`)
+	viper.SetConfigFile(configFile)
 	err := viper.ReadInConfig()
 	if err != nil {
 		log.Fatalf("Fail to parse 'config.json': %v", err)

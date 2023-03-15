@@ -10,7 +10,7 @@ type JWTBuilder struct {
 	secret string
 }
 
-func NewJWTMaker(secret string) TokenBuilder {
+func NewJWTBuilder(secret string) TokenBuilder {
 	return &JWTBuilder{secret: secret}
 }
 
