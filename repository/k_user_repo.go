@@ -12,7 +12,7 @@ type RepoKUser struct {
 	Conn *gorm.DB
 }
 
-func NewRepoKUser(Conn *gorm.DB) *RepoKUser {
+func NewRepoKUser(Conn *gorm.DB) IKUserRepository {
 	return &RepoKUser{Conn}
 }
 
@@ -43,4 +43,21 @@ func (db *RepoKUser) Update(ID int, data interface{}) error {
 		return err
 	}
 	return nil
+}
+
+func (db *RepoKUser) GetByAccount(account string, userType string) (result models.KUser, err error) {
+	var (
+		logger = logging.Logger{}
+	)
+	query := db.Conn.Where("(email ilike ? OR telp=?) and user_type=?", account, account, userType)
+	logger.Query(fmt.Sprintf("%v", query))
+	// logger.Query(fmt.Sprintf("%v", query))
+	err = query.Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return result, models.ErrNotFound
+		}
+		return result, err
+	}
+	return result, err
 }
