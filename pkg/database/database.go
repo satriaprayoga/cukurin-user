@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/satriaprayoga/cukurin-user/models"
 	"github.com/satriaprayoga/cukurin-user/pkg/settings"
 
 	"gorm.io/driver/postgres"
@@ -67,7 +68,7 @@ func Setup() {
 
 func migrate() {
 	log.Println("START AUTO MIGRATE")
-	// Conn.AutoMigrate(models.KUser{})
+	Conn.AutoMigrate(models.KUser{})
 	log.Println("FINISHING AUTO MIGRATE ")
 }
 

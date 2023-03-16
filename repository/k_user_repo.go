@@ -49,7 +49,7 @@ func (db *RepoKUser) GetByAccount(account string, userType string) (result model
 	var (
 		logger = logging.Logger{}
 	)
-	query := db.Conn.Where("(email ilike ? OR telp=?) and user_type=?", account, account, userType)
+	query := db.Conn.Where("email LIKE ? OR telp=? AND user_type=?", account, account, userType).Find(&result)
 	logger.Query(fmt.Sprintf("%v", query))
 	// logger.Query(fmt.Sprintf("%v", query))
 	err = query.Error
