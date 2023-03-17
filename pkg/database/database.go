@@ -68,7 +68,9 @@ func Setup() {
 
 func migrate() {
 	log.Println("START AUTO MIGRATE")
-	Conn.AutoMigrate(models.KUser{})
+	Conn.AutoMigrate(
+		models.KUser{},
+		models.KSession{})
 	log.Println("FINISHING AUTO MIGRATE ")
 }
 

@@ -2,13 +2,11 @@ package token
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"strconv"
 	"time"
 
 	"github.com/satriaprayoga/cukurin-user/models"
-	"github.com/satriaprayoga/cukurin-user/pkg/logging"
 	"github.com/satriaprayoga/cukurin-user/pkg/settings"
 	"github.com/satriaprayoga/cukurin-user/pkg/utils"
 	repo "github.com/satriaprayoga/cukurin-user/repository"
@@ -30,9 +28,9 @@ func NewJwtTokenService(k repo.IKUserRepository, cto time.Duration) TokenService
 }
 
 func (j *JwtTokenService) Login(ctx context.Context, dataLogin *models.LoginForm) (output interface{}, err error) {
-	var (
-		logger = logging.Logger{}
-	)
+	//var (
+	//	logger = logging.Logger{}
+	//)
 	_, cancel := context.WithTimeout(ctx, j.contextTimeOut)
 	defer cancel()
 
@@ -62,10 +60,11 @@ func (j *JwtTokenService) Login(ctx context.Context, dataLogin *models.LoginForm
 		"token":     t,
 		"data_user": restUser,
 	}
-	jsonResp, err := json.Marshal(response)
-	if err != nil {
-		logger.Error("cannot convert to json", response)
-	}
-	logger.Info("token response: ", string(jsonResp))
+
+	//jsonResp, err := json.Marshal(response)
+	//if err != nil {
+	//	logger.Error("cannot convert to json", response)
+	//}
+	//logger.Info("token response: ", string(jsonResp))
 	return response, nil
 }
