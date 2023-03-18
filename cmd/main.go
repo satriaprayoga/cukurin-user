@@ -20,7 +20,7 @@ func main() {
 	settings.Setup("./config/config.json")
 
 	token_builder := token.NewJWTBuilder(settings.AppConfigSetting.App.JwtSecret)
-	t, _ := token_builder.CreateToken(utils.GenerateString(5), utils.RandomUserName(), "user")
+	t, _ := token_builder.CreateToken(1, utils.RandomUserName(), "user")
 	fmt.Println(t)
 
 	p, _ := token_builder.VerifyToken(t)
