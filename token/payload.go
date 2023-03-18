@@ -10,7 +10,7 @@ import (
 
 type Payload struct {
 	ID        uuid.UUID `json:"id"`
-	UserID    string    `json:"user_id,omitempty"`
+	UserID    int       `json:"user_id,omitempty"`
 	Username  string    `json:"user_name,omitempty"`
 	UserType  string    `json:"user_type,omitempty"`
 	IssuedAt  time.Time `json:"iat"`
@@ -18,7 +18,7 @@ type Payload struct {
 	Issuer    string    `json:"iss"`
 }
 
-func NewPayload(UserID string, Username string, UserType string) (*Payload, error) {
+func NewPayload(UserID int, Username string, UserType string) (*Payload, error) {
 	tokenId, err := uuid.NewRandom()
 	if err != nil {
 		return nil, err

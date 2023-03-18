@@ -13,4 +13,6 @@ type IKUserService interface {
 	GetDataBy(ctx context.Context, Payload token.Payload, ID int) (result interface{}, err error)
 	GetList(ctx context.Context, Payload token.Payload, queryparam models.ParamList) (result models.ResponseModelList, err error)
 	Create(ctx context.Context, data *models.KUser) (err error)
+	Update(ctx context.Context, Payload token.Payload, ID int, data models.UpdateUser) (err error)
+	Delete(ctx context.Context, ID int) (err error)
 }

@@ -14,7 +14,7 @@ func NewJWTBuilder(secret string) TokenBuilder {
 	return &JWTBuilder{secret: secret}
 }
 
-func (builder *JWTBuilder) CreateToken(UserID string, Username string, UserType string) (string, error) {
+func (builder *JWTBuilder) CreateToken(UserID int, Username string, UserType string) (string, error) {
 	payload, err := NewPayload(UserID, Username, UserType)
 	if err != nil {
 		return "", err

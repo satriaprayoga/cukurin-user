@@ -5,9 +5,9 @@ import (
 	"errors"
 	"math"
 	"reflect"
-	"strconv"
 	"time"
 
+	"github.com/fatih/structs"
 	"github.com/satriaprayoga/cukurin-user/models"
 	"github.com/satriaprayoga/cukurin-user/pkg/database"
 	"github.com/satriaprayoga/cukurin-user/pkg/utils"
@@ -15,16 +15,16 @@ import (
 	"github.com/satriaprayoga/cukurin-user/token"
 )
 
-type KUserService struct {
+type kUserService struct {
 	kuserrepo      repo.IKUserRepository
 	contextTimeOut time.Duration
 }
 
 func NewKUserService(kUserRepo repo.IKUserRepository, cto time.Duration) IKUserService {
-	return &KUserService{kuserrepo: kUserRepo, contextTimeOut: cto}
+	return &kUserService{kuserrepo: kUserRepo, contextTimeOut: cto}
 }
 
-func (r *KUserService) GetByEmailKUser(ctx context.Context, email string, usertype string) (result models.KUser, err error) {
+func (r *kUserService) GetByEmailKUser(ctx context.Context, email string, usertype string) (result models.KUser, err error) {
 	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
 	defer cancel()
 
@@ -37,12 +37,11 @@ func (r *KUserService) GetByEmailKUser(ctx context.Context, email string, userty
 
 }
 
-func (r *KUserService) ChangePassword(ctx context.Context, Payload token.Payload, DataChPwd models.ChangePassword) (err error) {
+func (r *kUserService) ChangePassword(ctx context.Context, Payload token.Payload, DataChPwd models.ChangePassword) (err error) {
 	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
 	defer cancel()
 
-	ID, _ := strconv.Atoi(Payload.UserID)
-	dataUser, err := r.kuserrepo.GetDataBy(ID)
+	dataUser, err := r.kuserrepo.GetDataBy(Payload.UserID)
 	if err != nil {
 		return err
 	}
@@ -68,7 +67,7 @@ func (r *KUserService) ChangePassword(ctx context.Context, Payload token.Payload
 	return nil
 }
 
-func (r *KUserService) GetDataBy(ctx context.Context, Payload token.Payload, ID int) (result interface{}, err error) {
+func (r *kUserService) GetDataBy(ctx context.Context, Payload token.Payload, ID int) (result interface{}, err error) {
 	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
 	defer cancel()
 
@@ -89,7 +88,7 @@ func (r *KUserService) GetDataBy(ctx context.Context, Payload token.Payload, ID 
 	return response, nil
 }
 
-func (r *KUserService) GetList(ctx context.Context, Payload token.Payload, queryparam models.ParamList) (result models.ResponseModelList, err error) {
+func (r *kUserService) GetList(ctx context.Context, Payload token.Payload, queryparam models.ParamList) (result models.ResponseModelList, err error) {
 	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
 	defer cancel()
 
@@ -113,11 +112,39 @@ func (r *KUserService) GetList(ctx context.Context, Payload token.Payload, query
 	return result, nil
 }
 
-func (r *KUserService) Create(ctx context.Context, data *models.KUser) (err error) {
+func (r *kUserService) Create(ctx context.Context, data *models.KUser) (err error) {
 	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
 	defer cancel()
 
 	err = r.kuserrepo.Create(data)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *kUserService) Update(ctx context.Context, Payload token.Payload, ID int, data models.UpdateUser) (err error) {
+	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
+	defer cancel()
+
+	dataUser, err := r.kuserrepo.GetByAccount(data.Email, data.UserType)
+	if dataUser.UserID != ID {
+		return errors.New("email sudah terdaftar")
+	}
+	datas := structs.Map(data)
+	datas["user_edit"] = Payload.UserID
+	err = r.kuserrepo.Update(ID, data)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *kUserService) Delete(ctx context.Context, ID int) (err error) {
+	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
+	defer cancel()
+
+	err = r.kuserrepo.Delete(ID)
 	if err != nil {
 		return err
 	}

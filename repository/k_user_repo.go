@@ -9,15 +9,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type RepoKUser struct {
+type repoKUser struct {
 	Conn *gorm.DB
 }
 
 func NewRepoKUser(Conn *gorm.DB) IKUserRepository {
-	return &RepoKUser{Conn}
+	return &repoKUser{Conn}
 }
 
-func (db *RepoKUser) Create(data *models.KUser) error {
+func (db *repoKUser) Create(data *models.KUser) error {
 	var (
 		logger = logging.Logger{}
 		err    error
@@ -31,7 +31,7 @@ func (db *RepoKUser) Create(data *models.KUser) error {
 	return nil
 }
 
-func (db *RepoKUser) Update(ID int, data interface{}) error {
+func (db *repoKUser) Update(ID int, data interface{}) error {
 	var (
 		logger = logging.Logger{}
 		err    error
@@ -46,7 +46,7 @@ func (db *RepoKUser) Update(ID int, data interface{}) error {
 	return nil
 }
 
-func (db *RepoKUser) GetByAccount(account string, userType string) (result models.KUser, err error) {
+func (db *repoKUser) GetByAccount(account string, userType string) (result models.KUser, err error) {
 	var (
 		logger = logging.Logger{}
 	)
@@ -63,7 +63,7 @@ func (db *RepoKUser) GetByAccount(account string, userType string) (result model
 	return result, err
 }
 
-func (db *RepoKUser) UpdatePasswordByEmail(Email string, Password string) error {
+func (db *repoKUser) UpdatePasswordByEmail(Email string, Password string) error {
 	var (
 		logger = logging.Logger{}
 		err    error
@@ -77,7 +77,7 @@ func (db *RepoKUser) UpdatePasswordByEmail(Email string, Password string) error 
 	return nil
 }
 
-func (db *RepoKUser) GetDataBy(ID int) (result *models.KUser, err error) {
+func (db *repoKUser) GetDataBy(ID int) (result *models.KUser, err error) {
 	var (
 		logger = logging.Logger{}
 		kuser  = &models.KUser{}
@@ -94,7 +94,7 @@ func (db *RepoKUser) GetDataBy(ID int) (result *models.KUser, err error) {
 	return kuser, nil
 }
 
-func (db *RepoKUser) GetList(queryparam models.ParamList) (result []*models.KUser, err error) {
+func (db *repoKUser) GetList(queryparam models.ParamList) (result []*models.KUser, err error) {
 	var (
 		pageNum  = 0
 		pageSize = settings.AppConfigSetting.App.PageSize
@@ -151,7 +151,7 @@ func (db *RepoKUser) GetList(queryparam models.ParamList) (result []*models.KUse
 	return result, nil
 }
 
-func (db *RepoKUser) Count(querparam models.ParamList) (result int, err error) {
+func (db *repoKUser) Count(querparam models.ParamList) (result int, err error) {
 	var (
 		sWhere        = ""
 		logger        = logging.Logger{}
@@ -178,7 +178,7 @@ func (db *RepoKUser) Count(querparam models.ParamList) (result int, err error) {
 	return int(_result), nil
 }
 
-func (db *RepoKUser) Delete(ID int) error {
+func (db *repoKUser) Delete(ID int) error {
 	var (
 		logger = logging.Logger{}
 		err    error

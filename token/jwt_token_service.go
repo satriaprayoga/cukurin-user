@@ -3,7 +3,6 @@ package token
 import (
 	"context"
 	"errors"
-	"strconv"
 	"time"
 
 	"github.com/satriaprayoga/cukurin-user/models"
@@ -44,7 +43,7 @@ func (j *JwtTokenService) Login(ctx context.Context, dataLogin *models.LoginForm
 	if !utils.ComparePassword(DataUser.Password, utils.GetPassword(dataLogin.Password)) {
 		return nil, errors.New("password yang anda masukkan salah, silahkan coba lagi")
 	}
-	t, err := j.tokenBuilder.CreateToken(strconv.Itoa(DataUser.UserID), DataUser.UserName, DataUser.UserType)
+	t, err := j.tokenBuilder.CreateToken(DataUser.UserID, DataUser.UserName, DataUser.UserType)
 	if err != nil {
 		return nil, err
 	}

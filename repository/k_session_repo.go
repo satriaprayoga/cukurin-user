@@ -8,15 +8,15 @@ import (
 	"gorm.io/gorm"
 )
 
-type RepoKSession struct {
+type repoKSession struct {
 	Conn *gorm.DB
 }
 
 func NewRepoKSession(Conn *gorm.DB) IKSessionRepository {
-	return &RepoKSession{Conn}
+	return &repoKSession{Conn}
 }
 
-func (db *RepoKSession) Create(data *models.KSession) error {
+func (db *repoKSession) Create(data *models.KSession) error {
 	var (
 		logger = logging.Logger{}
 		err    error
@@ -30,7 +30,7 @@ func (db *RepoKSession) Create(data *models.KSession) error {
 	return nil
 }
 
-func (db *RepoKSession) GetByUserID(UserID int) (output *models.KSession, err error) {
+func (db *repoKSession) GetByUserID(UserID int) (output *models.KSession, err error) {
 	var (
 		ksession = &models.KSession{}
 		logger   = logging.Logger{}
@@ -47,7 +47,7 @@ func (db *RepoKSession) GetByUserID(UserID int) (output *models.KSession, err er
 	return ksession, nil
 }
 
-func (db *RepoKSession) DeleteByUserID(UserID int) (err error) {
+func (db *repoKSession) DeleteByUserID(UserID int) (err error) {
 
 	var (
 		logger = logging.Logger{}
