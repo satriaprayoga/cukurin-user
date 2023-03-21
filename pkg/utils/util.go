@@ -98,3 +98,9 @@ func Float64bytes(float float64) []byte {
 	binary.LittleEndian.PutUint64(bytes, bits)
 	return bytes
 }
+
+func GetDayOfBirth(year, month, day int, format string) (time.Time, string) {
+	dob := time.Date(year, time.Month(month), day, 0, 0, 0, 0, time.UTC)
+	str_dob := fmt.Sprintf("%v", dob.Format(format))
+	return dob, str_dob
+}

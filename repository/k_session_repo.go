@@ -47,6 +47,40 @@ func (db *repoKSession) GetByUserID(UserID int) (output *models.KSession, err er
 	return ksession, nil
 }
 
+func (db *repoKSession) GetByAccount(account string) (output *models.KSession, err error) {
+	var (
+		ksession = &models.KSession{}
+		logger   = logging.Logger{}
+	)
+	query := db.Conn.Where("account=?", account).Find(ksession)
+	logger.Query(fmt.Sprintf("%v", query))
+	err = query.Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, models.ErrNotFound
+		}
+		return nil, err
+	}
+	return ksession, nil
+}
+
+func (db *repoKSession) GetBySessionID(SessionID string) (output *models.KSession, err error) {
+	var (
+		ksession = &models.KSession{}
+		logger   = logging.Logger{}
+	)
+	query := db.Conn.Where("session_id=?", SessionID).Find(ksession)
+	logger.Query(fmt.Sprintf("%v", query))
+	err = query.Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, models.ErrNotFound
+		}
+		return nil, err
+	}
+	return ksession, nil
+}
+
 func (db *repoKSession) DeleteByUserID(UserID int) (err error) {
 
 	var (
