@@ -31,3 +31,9 @@ type ResetPasswd struct {
 	UserType      string `jsong:"user_type" valid:"Required"`
 	ConfirmPasswd string `json:"confirm_pwd" valid:"Required"`
 }
+
+// ForgotForm :
+type ForgotForm struct {
+	Account  string `json:"account" valid:"Required"`
+	UserType string `json:"user_type" valid:"Required"`
+}

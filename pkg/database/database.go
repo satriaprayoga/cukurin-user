@@ -70,7 +70,8 @@ func migrate() {
 	log.Println("START AUTO MIGRATE")
 	Conn.AutoMigrate(
 		models.KUser{},
-		models.KSession{})
+		models.KSession{},
+		models.FileUpload{})
 	log.Println("FINISHING AUTO MIGRATE ")
 }
 

@@ -184,6 +184,31 @@ func (a *authService) ResetPassword(ctx context.Context, dataReset *models.Reset
 
 }
 
+func (a *authService) ForgotPassword(ctx context.Context, dataForgt *models.ForgotForm) (result string, err error) {
+	_, cancel := context.WithTimeout(ctx, a.contextTimeOut)
+	defer cancel()
+
+	DataUser, err := a.repoKUser.GetByAccount(dataForgt.Account, dataForgt.UserType)
+	if err != nil {
+		return "", errors.New("akun tidak valid")
+	}
+
+	if DataUser.UserName == "" {
+		return "", errors.New("akun tidak valid")
+	}
+
+	GenOTP := utils.GenerateNumber(4)
+	DataUser.Password, _ = utils.Hash(GenOTP)
+	err = a.repoKUser.UpdatePasswordByEmail(dataForgt.Account, DataUser.Password)
+	if err != nil {
+		return "", err
+	}
+
+	//mailservice
+
+	return GenOTP, nil
+}
+
 func (a *authService) VerifyRegisterLogin(ctx context.Context, dataVerify *models.VerifyForm) (output interface{}, err error) {
 	_, cancel := context.WithTimeout(ctx, a.contextTimeOut)
 	defer cancel()
