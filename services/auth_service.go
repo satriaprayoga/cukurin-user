@@ -7,6 +7,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/satriaprayoga/cukurin-user/models"
+	"github.com/satriaprayoga/cukurin-user/pkg/sessions"
 	"github.com/satriaprayoga/cukurin-user/pkg/settings"
 	"github.com/satriaprayoga/cukurin-user/pkg/utils"
 	repo "github.com/satriaprayoga/cukurin-user/repository"
@@ -14,20 +15,20 @@ import (
 )
 
 type authService struct {
-	repoKUser      repo.IKUserRepository
-	repoKSession   repo.IKSessionRepository
+	repoKUser repo.IKUserRepository
+	//repoKSession   repo.IKSessionRepository
 	contextTimeOut time.Duration
 }
 
-func NewAuthService(a repo.IKUserRepository, b repo.IKSessionRepository, timeout time.Duration) IAuthService {
-	return &authService{repoKUser: a, repoKSession: b, contextTimeOut: timeout}
+func NewAuthService(a repo.IKUserRepository /*b repo.IKSessionRepository,*/, timeout time.Duration) IAuthService {
+	return &authService{repoKUser: a /*repoKSession: b,*/, contextTimeOut: timeout}
 }
 
-func (a *authService) Logout(ctx context.Context, Payload token.Payload) error {
+func (a *authService) Logout(ctx context.Context, claims token.Claims) error {
 	_, cancel := context.WithTimeout(ctx, a.contextTimeOut)
 	defer cancel()
 
-	err := a.repoKSession.DeleteByUserID(Payload.UserID)
+	err := sessions.DeleteByUserID(claims.UserID)
 	if err != nil {
 		return err
 	}
@@ -38,8 +39,8 @@ func (a *authService) Register(ctx context.Context, dataRegister models.Register
 	defer cancel()
 
 	var (
-		User     models.KUser
-		ksession models.KSession
+		User models.KUser
+		//ksession models.KSession
 	)
 
 	CekData, err := a.repoKUser.GetByAccount(dataRegister.Account, dataRegister.UserType)
@@ -83,12 +84,13 @@ func (a *authService) Register(ctx context.Context, dataRegister models.Register
 	}
 
 	GenCode := utils.GenerateNumber(4)
-	ksession.SessionID = GenCode
-	ksession.UserID = User.UserID
-	ksession.SessionType = "register"
-	ksession.ExpiresAt = time.Now().Add(time.Hour * time.Duration(24))
-	ksession.Account = User.Email
-	err = a.repoKSession.Create(&ksession)
+	//ksession.SessionID = GenCode
+	//ksession.UserID = User.UserID
+	//ksession.SessionType = "register"
+	//ksession.ExpiresAt = time.Now().Add(time.Hour * time.Duration(24))
+	//ksession.Account = User.Email
+	err = sessions.CreateSession(GenCode, "register", User.Email, User.UserID, time.Now().Add(time.Hour*time.Duration(24)))
+	//err = a.repoKSession.Create(&ksession)
 	if err != nil {
 		return nil, err
 	}
@@ -106,7 +108,7 @@ func (a *authService) Login(ctx context.Context, dataLogin *models.LoginForm) (o
 
 	var (
 		expireToken = settings.AppConfigSetting.JWTExpired
-		ksession    models.KSession
+		//ksession    models.KSession
 	)
 
 	DataUser, err := a.repoKUser.GetByAccount(dataLogin.Account, dataLogin.UserType)
@@ -126,17 +128,19 @@ func (a *authService) Login(ctx context.Context, dataLogin *models.LoginForm) (o
 		return nil, errors.New("password salah")
 	}
 
-	jwtToken, err := token.GenerateJwtToken(DataUser.UserID, DataUser.UserName, DataUser.UserType)
+	sessionID := uuid.New().String()
+
+	jwtToken, err := token.GenerateToken(sessionID, DataUser.UserID, DataUser.UserName, DataUser.UserType)
 	if err != nil {
 		return nil, err
 	}
-	ksession.SessionID = uuid.New().String()
-	ksession.UserID = DataUser.UserID
-	ksession.Account = dataLogin.Account
-	ksession.ExpiresAt = time.Now().Add(time.Hour * time.Duration(expireToken))
-	ksession.SessionType = "auth"
-
-	err = a.repoKSession.Create(&ksession)
+	//ksession.SessionID = sessionID
+	//ksession.UserID = DataUser.UserID
+	//ksession.Account = dataLogin.Account
+	//ksession.ExpiresAt = time.Now().Add(time.Hour * time.Duration(expireToken))
+	//ksession.SessionType = "auth"
+	err = sessions.CreateSession(sessionID, "auth", dataLogin.Account, DataUser.UserID, time.Now().Add(time.Hour*time.Duration(expireToken)))
+	//err = a.repoKSession.Create(&ksession)
 	if err != nil {
 		return nil, err
 	}
@@ -215,10 +219,10 @@ func (a *authService) VerifyRegisterLogin(ctx context.Context, dataVerify *model
 
 	var (
 		expireToken = settings.AppConfigSetting.JWTExpired
-		ksession    models.KSession
+		//ksession    models.KSession
 	)
 
-	data, err := a.repoKSession.GetByAccount(dataVerify.Account)
+	data, err := sessions.GetSessionByAccount(dataVerify.Account)
 	if err != nil {
 		return nil, errors.New("akun yang anda masukkan salah")
 	}
@@ -231,7 +235,7 @@ func (a *authService) VerifyRegisterLogin(ctx context.Context, dataVerify *model
 		return nil, errors.New("akun yang anda masukkan salah")
 	}
 
-	a.repoKSession.DeleteByUserID(DataUser.UserID)
+	sessions.DeleteByUserID(DataUser.UserID)
 
 	mUser := map[string]interface{}{
 		"is_active": true,
@@ -242,16 +246,21 @@ func (a *authService) VerifyRegisterLogin(ctx context.Context, dataVerify *model
 		return output, err
 	}
 
-	jwtToken, err := token.GenerateJwtToken(DataUser.UserID, DataUser.UserName, DataUser.UserType)
+	sessionID := uuid.New().String()
+
+	jwtToken, err := token.GenerateToken(sessionID, DataUser.UserID, DataUser.UserName, DataUser.UserType)
 	if err != nil {
 		return nil, err
 	}
-	ksession.SessionID = uuid.New().String()
-	ksession.UserID = DataUser.UserID
-	ksession.ExpiresAt = time.Now().Add(time.Hour * time.Duration(expireToken))
-	ksession.SessionType = "auth"
+	//ksession.SessionID = sessionID
+	//ksession.UserID = DataUser.UserID
+	//ksession.Account = DataUser.Email
+	//ksession.ExpiresAt = time.Now().Add(time.Hour * time.Duration(expireToken))
+	//ksession.SessionType = "auth"
 
-	err = a.repoKSession.Create(&ksession)
+	err = sessions.CreateSession(sessionID, "auth", DataUser.Email, DataUser.UserID, time.Now().Add(time.Hour*time.Duration(expireToken)))
+
+	//err = a.repoKSession.Create(&ksession)
 	if err != nil {
 		return nil, err
 	}
@@ -275,7 +284,7 @@ func (a *authService) VerifyRegister(ctx context.Context, dataVerify *models.Ver
 	_, cancel := context.WithTimeout(ctx, a.contextTimeOut)
 	defer cancel()
 
-	data, err := a.repoKSession.GetByAccount(dataVerify.Account)
+	data, err := sessions.GetSessionByAccount(dataVerify.Account)
 	if err != nil {
 		return nil, errors.New("akun yang anda masukkan salah")
 	}
@@ -288,7 +297,7 @@ func (a *authService) VerifyRegister(ctx context.Context, dataVerify *models.Ver
 		return nil, errors.New("akun yang anda masukkan salah")
 	}
 
-	a.repoKSession.DeleteByUserID(DataUser.UserID)
+	sessions.DeleteByUserID(DataUser.UserID)
 
 	mUser := map[string]interface{}{
 		"is_active": true,

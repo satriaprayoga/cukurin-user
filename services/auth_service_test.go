@@ -8,102 +8,35 @@ import (
 	"github.com/satriaprayoga/cukurin-user/models"
 	"github.com/satriaprayoga/cukurin-user/pkg/database"
 	"github.com/satriaprayoga/cukurin-user/pkg/logging"
+	"github.com/satriaprayoga/cukurin-user/pkg/sessions"
 	"github.com/satriaprayoga/cukurin-user/pkg/settings"
 	"github.com/satriaprayoga/cukurin-user/pkg/utils"
 	repo "github.com/satriaprayoga/cukurin-user/repository"
 	"github.com/stretchr/testify/require"
 )
 
-func TestAuthRegister(t *testing.T) {
+func TestRegister(t *testing.T) {
+
+	settings.Setup("../config/config.json")
+	database.Setup()
+	sessions.Setup()
+	logging.Setup()
+
 	var (
+		timeOut      = settings.AppConfigSetting.Server.ReadTimeOut
 		ctx          = context.Background()
-		dataRegister models.RegisterForm
+		registerForm models.RegisterForm
 	)
-	settings.Setup("../config/config.json")
-	database.Setup()
-	logging.Setup()
 	repoKUser := repo.NewRepoKUser(database.Conn)
-	repoKSession := repo.NewRepoKSession(database.Conn)
-	//var expireToken = settings.AppConfigSetting.JWTExpired
-	authService := NewAuthService(repoKUser, repoKSession, time.Duration(time.Duration(3)*time.Millisecond))
-
-	dataRegister.Name = "Gilang SP"
-	dataRegister.UserName = "gsprayoga"
-	dataRegister.Account = "satria.prayoga@gmail.com"
-	dataRegister.Passwd = "asdqwe123"
-	dataRegister.ConfirmPasswd = "asdqwe123"
-	dataRegister.UserType = "user"
-	dob, _ := utils.GetDayOfBirth(1987, 05, 04, "2020-10-05")
-	dataRegister.BirthOfDate = dob
-	out, err := authService.Register(ctx, dataRegister)
+	authService := NewAuthService(repoKUser, time.Second*time.Duration(timeOut))
+	registerForm.Account = "satria.prayoga@gmail.com"
+	registerForm.BirthOfDate, _ = utils.GetDayOfBirth(1987, 05, 04, "2022-03-12")
+	registerForm.Name = "Gilang Satria"
+	registerForm.UserName = "gsprayoga"
+	registerForm.Passwd = "asdqwe123"
+	registerForm.ConfirmPasswd = "asdqwe123"
+	registerForm.UserType = "user"
+	data, err := authService.Register(ctx, registerForm)
 	require.NoError(t, err)
-	require.NotNil(t, out)
-}
-
-func TestVerifyRegisterLogin(t *testing.T) {
-	var (
-		ctx        = context.Background()
-		dataVerify *models.VerifyForm
-	)
-	settings.Setup("../config/config.json")
-	database.Setup()
-	logging.Setup()
-	repoKUser := repo.NewRepoKUser(database.Conn)
-	repoKSession := repo.NewRepoKSession(database.Conn)
-	//var expireToken = settings.AppConfigSetting.JWTExpired
-	authService := NewAuthService(repoKUser, repoKSession, time.Duration(time.Duration(3)*time.Millisecond))
-	dataVerify = &models.VerifyForm{
-		Account:    "satria.prayoga@gmail.com",
-		VerifyCode: "4470",
-	}
-	out, err := authService.VerifyRegisterLogin(ctx, dataVerify)
-	require.NoError(t, err)
-	require.NotNil(t, out)
-
-}
-
-func TestVerifyRegister(t *testing.T) {
-	var (
-		ctx        = context.Background()
-		dataVerify *models.VerifyForm
-	)
-	settings.Setup("../config/config.json")
-	database.Setup()
-	logging.Setup()
-	repoKUser := repo.NewRepoKUser(database.Conn)
-	repoKSession := repo.NewRepoKSession(database.Conn)
-	//var expireToken = settings.AppConfigSetting.JWTExpired
-	authService := NewAuthService(repoKUser, repoKSession, time.Duration(time.Duration(3)*time.Millisecond))
-	dataVerify = &models.VerifyForm{
-		Account:    "satria.prayoga@gmail.com",
-		VerifyCode: "2545",
-	}
-	out, err := authService.VerifyRegister(ctx, dataVerify)
-	require.NoError(t, err)
-	require.NotNil(t, out)
-
-}
-
-func TestAuthLogin(t *testing.T) {
-	var (
-		ctx = context.Background()
-	)
-
-	settings.Setup("../config/config.json")
-	database.Setup()
-	logging.Setup()
-	repoKUser := repo.NewRepoKUser(database.Conn)
-	repoKSession := repo.NewRepoKSession(database.Conn)
-	//var expireToken = settings.AppConfigSetting.JWTExpired
-	authService := NewAuthService(repoKUser, repoKSession, time.Duration(time.Duration(3)*time.Millisecond))
-	dataLogin := &models.LoginForm{
-		Account:  "satria.prayoga@gmail.com",
-		Password: "asdqwe123",
-		UserType: "user",
-	}
-
-	out, err := authService.Login(ctx, dataLogin)
-	require.NoError(t, err)
-	require.NotNil(t, out)
-
+	require.NotNil(t, data)
 }

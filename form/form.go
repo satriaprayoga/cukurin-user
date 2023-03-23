@@ -34,12 +34,15 @@ func MarkErrors(errors []*validation.Error) string {
 	return res
 }
 
-func GetPayload(c echo.Context) (token.Payload, error) {
-	var p token.Payload
-	payload := c.Get("payload")
-	err := mapstructure.Decode(payload, &p)
+func GetClaims(c echo.Context) (token.Claims, error) {
+	var clm token.Claims
+	claims := c.Get("claims")
+	// user := c.Get("user").(*jwt.Token)
+	// claims := user.Claims.(*util.Claims)
+
+	err := mapstructure.Decode(claims, &clm)
 	if err != nil {
-		return p, err
+		return clm, err
 	}
-	return p, nil
+	return clm, nil
 }

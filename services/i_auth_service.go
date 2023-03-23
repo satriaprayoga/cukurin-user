@@ -8,7 +8,7 @@ import (
 )
 
 type IAuthService interface {
-	Logout(ctx context.Context, Payload token.Payload) error
+	Logout(ctx context.Context, claims token.Claims) error
 	Register(ctx context.Context, dataRegister models.RegisterForm) (output interface{}, err error)
 	Login(ctx context.Context, dataLogin *models.LoginForm) (output interface{}, err error)
 	ResetPassword(ctx context.Context, dataReset *models.ResetPasswd) (err error)

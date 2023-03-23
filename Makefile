@@ -1,5 +1,5 @@
 postgres-run:
-	@docker run --name postgrestest -p 5432:5432 -e POSTGRES_USER=root -e POSTGRES_PASSWORD=asdqwe123 -e POSTGRES_DB=cukurin -d postgres
+	@docker run --name postgrestest -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=asdqwe123 -e POSTGRES_DB=cukurin -d postgres
 redis-run:
 	@docker run -d -p 6379:6379 --name redistest redis
 
