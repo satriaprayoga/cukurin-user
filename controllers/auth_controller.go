@@ -76,3 +76,29 @@ func (c *AuthController) Login(e echo.Context) error {
 	}
 	return resp.Response(http.StatusOK, "Ok", out)
 }
+
+func (c *AuthController) VerifyLogin(e echo.Context) error {
+	ctx := e.Request().Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	var (
+		logger = logging.Logger{}
+		resp   = response.Resp{R: e}
+
+		verifyForm = models.VerifyForm{}
+	)
+
+	httpCode, errMsg := form.BindAndValid(e, &verifyForm)
+	logger.Info(utils.Stringify(verifyForm))
+	if httpCode != 200 {
+		return resp.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", errMsg), nil)
+	}
+	data, err := c.authService.VerifyRegisterLogin(ctx, &verifyForm)
+	if err != nil {
+		return resp.Response(http.StatusUnauthorized, fmt.Sprintf("%v", err), nil)
+	}
+	return resp.Response(http.StatusOK, "Ok", data)
+
+}
