@@ -24,4 +24,7 @@ func (a *AppRoutes) Setup() {
 
 	authService := services.NewAuthService(repoKUser, timeoutContext)
 	controllers.NewAuthController(a.E, authService)
+
+	kUserService := services.NewKUserService(repoKUser, timeoutContext)
+	controllers.NewKUserController(a.E, kUserService)
 }

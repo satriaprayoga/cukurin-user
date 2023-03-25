@@ -37,11 +37,11 @@ func (r *kUserService) GetByEmailKUser(ctx context.Context, email string, userty
 
 }
 
-func (r *kUserService) ChangePassword(ctx context.Context, Payload token.Payload, DataChPwd models.ChangePassword) (err error) {
+func (r *kUserService) ChangePassword(ctx context.Context, Claims token.Claims, DataChPwd models.ChangePassword) (err error) {
 	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
 	defer cancel()
 
-	dataUser, err := r.kuserrepo.GetDataBy(Payload.UserID)
+	dataUser, err := r.kuserrepo.GetDataBy(Claims.UserID)
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func (r *kUserService) ChangePassword(ctx context.Context, Payload token.Payload
 	return nil
 }
 
-func (r *kUserService) GetDataBy(ctx context.Context, Payload token.Payload, ID int) (result interface{}, err error) {
+func (r *kUserService) GetDataBy(ctx context.Context, Claims token.Claims, ID int) (result interface{}, err error) {
 	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
 	defer cancel()
 
@@ -88,7 +88,7 @@ func (r *kUserService) GetDataBy(ctx context.Context, Payload token.Payload, ID 
 	return response, nil
 }
 
-func (r *kUserService) GetList(ctx context.Context, Payload token.Payload, queryparam models.ParamList) (result models.ResponseModelList, err error) {
+func (r *kUserService) GetList(ctx context.Context, Claims token.Claims, queryparam models.ParamList) (result models.ResponseModelList, err error) {
 	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
 	defer cancel()
 
@@ -123,7 +123,7 @@ func (r *kUserService) Create(ctx context.Context, data *models.KUser) (err erro
 	return nil
 }
 
-func (r *kUserService) Update(ctx context.Context, Payload token.Payload, ID int, data models.UpdateUser) (err error) {
+func (r *kUserService) Update(ctx context.Context, Claims token.Claims, ID int, data models.UpdateUser) (err error) {
 	_, cancel := context.WithTimeout(ctx, r.contextTimeOut)
 	defer cancel()
 
@@ -132,7 +132,7 @@ func (r *kUserService) Update(ctx context.Context, Payload token.Payload, ID int
 		return errors.New("email sudah terdaftar")
 	}
 	datas := structs.Map(data)
-	datas["user_edit"] = Payload.UserID
+	datas["user_edit"] = Claims.UserID
 	err = r.kuserrepo.Update(ID, data)
 	if err != nil {
 		return err
