@@ -25,6 +25,8 @@ func NewAuthController(e *echo.Echo, authService services.IAuthService) {
 	}
 	r := e.Group("/user/auth")
 	r.POST("/login", cont.Login)
+	r.POST("/register", cont.Register)
+	r.POST("/register/verify", cont.VerifyLogin)
 
 	l := e.Group("/user/auth/logout")
 	l.Use(middlewares.JWT)
@@ -75,6 +77,30 @@ func (c *AuthController) Login(e echo.Context) error {
 		return resp.ResponseError(http.StatusUnauthorized, fmt.Sprintf("%v", err), nil)
 	}
 	return resp.Response(http.StatusOK, "Ok", out)
+}
+
+func (c *AuthController) Register(e echo.Context) error {
+	ctx := e.Request().Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	var (
+		logger       = logging.Logger{}
+		resp         = response.Resp{R: e}
+		registerForm = models.RegisterForm{}
+	)
+	httpCode, errMsg := form.BindAndValid(e, &registerForm)
+	logger.Info(utils.Stringify(registerForm))
+	if httpCode != 200 {
+		return resp.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", errMsg), nil)
+	}
+	out, err := c.authService.Register(ctx, registerForm)
+	if err != nil {
+		return resp.ResponseError(http.StatusBadRequest, fmt.Sprintf("%v", err), nil)
+	}
+	return resp.Response(http.StatusOK, "Ok", out)
+
 }
 
 func (c *AuthController) VerifyLogin(e echo.Context) error {

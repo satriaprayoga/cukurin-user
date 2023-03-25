@@ -2,29 +2,43 @@ package main
 
 import (
 	"fmt"
+	"log"
 
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+	"github.com/satriaprayoga/cukurin-user/pkg/database"
 	"github.com/satriaprayoga/cukurin-user/pkg/logging"
+	"github.com/satriaprayoga/cukurin-user/pkg/sessions"
 	"github.com/satriaprayoga/cukurin-user/pkg/settings"
-	"github.com/satriaprayoga/cukurin-user/pkg/utils"
-	"github.com/satriaprayoga/cukurin-user/token"
+	routes "github.com/satriaprayoga/cukurin-user/routes"
 )
 
 func init() {
 	settings.Setup("./config/config.json")
-	//database.Setup()
+	database.Setup()
 	// redisdb.Setup()
+	sessions.Setup()
 	logging.Setup()
 }
 
 func main() {
-	settings.Setup("./config/config.json")
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+	e.Use(middleware.CORS())
 
-	token_builder := token.NewJWTBuilder(settings.AppConfigSetting.App.JwtSecret)
-	t, _ := token_builder.CreateToken(1, utils.RandomUserName(), "user")
-	fmt.Println(t)
+	R := routes.AppRoutes{E: e}
+	R.Setup()
+	sPort := fmt.Sprintf(":%d", settings.AppConfigSetting.Server.HTTPPort)
+	log.Fatal(e.Start(sPort))
+	// settings.Setup("./config/config.json")
 
-	p, _ := token_builder.VerifyToken(t)
-	fmt.Printf("%v", p)
+	// token_builder := token.NewJWTBuilder(settings.AppConfigSetting.App.JwtSecret)
+	// t, _ := token_builder.CreateToken(1, utils.RandomUserName(), "user")
+	// fmt.Println(t)
+
+	// p, _ := token_builder.VerifyToken(t)
+	// fmt.Printf("%v", p)
 
 	// e := echo.New()
 	// e.Use(middleware.Logger())
