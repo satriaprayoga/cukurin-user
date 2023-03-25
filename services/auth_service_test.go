@@ -40,3 +40,46 @@ func TestRegister(t *testing.T) {
 	require.NoError(t, err)
 	require.NotNil(t, data)
 }
+
+func TestLogin(t *testing.T) {
+	settings.Setup("../config/config.json")
+	database.Setup()
+	sessions.Setup()
+	logging.Setup()
+
+	var (
+		timeOut   = settings.AppConfigSetting.Server.ReadTimeOut
+		ctx       = context.Background()
+		loginForm models.LoginForm
+	)
+
+	repoKUser := repo.NewRepoKUser(database.Conn)
+	authService := NewAuthService(repoKUser, time.Second*time.Duration(timeOut))
+	loginForm.Account = "satria.prayoga@gmail.com"
+	loginForm.Password = "asdqwe123"
+	loginForm.UserType = "user"
+	data, err := authService.Login(ctx, &loginForm)
+	require.Error(t, err, "akun belum aktif")
+	require.Nil(t, data, "")
+}
+
+func TestVerifyLogin(t *testing.T) {
+	settings.Setup("../config/config.json")
+	database.Setup()
+	sessions.Setup()
+	logging.Setup()
+
+	var (
+		timeOut    = settings.AppConfigSetting.Server.ReadTimeOut
+		ctx        = context.Background()
+		verifyForm models.VerifyForm
+	)
+
+	repoKUser := repo.NewRepoKUser(database.Conn)
+	authService := NewAuthService(repoKUser, time.Second*time.Duration(timeOut))
+	verifyForm.Account = "satria.prayoga@gmail.com"
+	verifyForm.VerifyCode = "2003"
+	data, err := authService.VerifyRegisterLogin(ctx, &verifyForm)
+	require.NoError(t, err)
+	require.NotNil(t, data)
+}
