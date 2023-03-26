@@ -1,0 +1,23 @@
+[INFO][com/satriaprayoga/cukurin-user/controllers][auth_controller.go:70]2023/03/26 02:20:23 {"account":"satria.prayoga@gmail.com","pwd":"asdqwe123","user_type":"user"}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_user_repo.go:54]2023/03/26 02:20:23 &{0xc0001ac6c0 <nil> 1 0xc00048a8c0 0}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_session_repo.go:25]2023/03/26 02:20:23 &{0xc0001ac6c0 <nil> 1 0xc00048aa80 0}
+[INFO][com/satriaprayoga/cukurin-user/pkg/response][response.go:25]2023/03/26 02:20:23 {"Message":"Ok","data":{"data_user":{"email":"satria.prayoga@gmail.com","telp":"","user_id":1,"user_name":"Gilang Satria","user_type":"user"},"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdkZmNkYjZmLWY4YzEtNDIyYS1hMDUzLTI0ZTgxMzNmZjA5MSIsInVzZXJfaWQiOjEsInVzZXJfbmFtZSI6ImdzcHJheW9nYSIsInVzZXJfdHlwZSI6InVzZXIiLCJleHAiOjE2ODAwMzEyMjMsImlhdCI6MTY3OTc3MjAyMywiaXNzIjoiQ3VrdXJpbkFwcDIwMjMifQ.XE7udKuqxisKk9v4Y3SY7oZxvuD5XI1ZOvi3yc3DY3s"}}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_session_repo.go:73]2023/03/26 02:21:36 &{0xc0001ac6c0 <nil> 1 0xc00048ae00 0}
+[INFO][com/satriaprayoga/cukurin-user/controllers][k_user_controller.go:40]2023/03/26 02:21:36 %v {7dfcdb6f-f8c1-422a-a053-24e8133ff091 1 gsprayoga user { 1680031223  1679772023 CukurinApp2023 0 }}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_user_repo.go:87]2023/03/26 02:21:36 &{0xc0001ac6c0 <nil> 1 0xc0001dc000 0}
+[INFO][com/satriaprayoga/cukurin-user/pkg/response][response.go:25]2023/03/26 02:21:36 {"Message":"Ok","data":{"birth_of_date":"1987-05-04T00:00:00Z","email":"satria.prayoga@gmail.com","telp":"","user_id":1,"user_name":"gsprayoga"}}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_session_repo.go:73]2023/03/26 02:22:20 &{0xc0001ac6c0 <nil> 1 0xc00048a1c0 0}
+[INFO][com/satriaprayoga/cukurin-user/controllers][k_user_controller.go:40]2023/03/26 02:22:20 %v {7dfcdb6f-f8c1-422a-a053-24e8133ff091 1 gsprayoga user { 1680031223  1679772023 CukurinApp2023 0 }}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_user_repo.go:87]2023/03/26 02:22:20 &{0xc0001ac6c0 <nil> 1 0xc00048a380 0}
+[INFO][com/satriaprayoga/cukurin-user/pkg/response][response.go:25]2023/03/26 02:22:20 {"Message":"Ok","data":{"birth_of_date":"1987-05-04T00:00:00Z","email":"satria.prayoga@gmail.com","telp":"","user_id":1,"user_name":"gsprayoga"}}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_session_repo.go:73]2023/03/26 02:22:43 &{0xc0001ac6c0 <nil> 1 0xc0001dc700 0}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_session_repo.go:90]2023/03/26 02:22:43 &{0xc0001ac6c0 <nil> 1 0xc0001dc8c0 0}
+[INFO][com/satriaprayoga/cukurin-user/pkg/response][response.go:25]2023/03/26 02:22:43 {"Message":"Ok","data":null}
+[INFO][com/satriaprayoga/cukurin-user/controllers][auth_controller.go:70]2023/03/26 02:23:01 {"account":"satria.prayoga@gmail.com","pwd":"asdqwe123","user_type":"user"}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_user_repo.go:54]2023/03/26 02:23:01 &{0xc0001ac6c0 <nil> 1 0xc0004dc000 0}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_session_repo.go:25]2023/03/26 02:23:01 &{0xc0001ac6c0 <nil> 1 0xc00048a540 0}
+[INFO][com/satriaprayoga/cukurin-user/pkg/response][response.go:25]2023/03/26 02:23:01 {"Message":"Ok","data":{"data_user":{"email":"satria.prayoga@gmail.com","telp":"","user_id":1,"user_name":"Gilang Satria","user_type":"user"},"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2NzA0ODcwLTE5YmEtNGJlYy1hNzE0LTc5YWQ5ZTNiZGIyZiIsInVzZXJfaWQiOjEsInVzZXJfbmFtZSI6ImdzcHJheW9nYSIsInVzZXJfdHlwZSI6InVzZXIiLCJleHAiOjE2ODAwMzEzODEsImlhdCI6MTY3OTc3MjE4MSwiaXNzIjoiQ3VrdXJpbkFwcDIwMjMifQ.FZZr13h6lSCCiKHeyKDiljS_k1LQZ7HtviZOcAAknyM"}}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_session_repo.go:73]2023/03/26 02:23:22 &{0xc0001ac6c0 <nil> 1 0xc0001dcc40 0}
+[INFO][com/satriaprayoga/cukurin-user/controllers][k_user_controller.go:40]2023/03/26 02:23:22 %v {66704870-19ba-4bec-a714-79ad9e3bdb2f 1 gsprayoga user { 1680031381  1679772181 CukurinApp2023 0 }}
+[QUERY][com/satriaprayoga/cukurin-user/repository][k_user_repo.go:87]2023/03/26 02:23:22 &{0xc0001ac6c0 <nil> 1 0xc00048a8c0 0}
+[INFO][com/satriaprayoga/cukurin-user/pkg/response][response.go:25]2023/03/26 02:23:22 {"Message":"Ok","data":{"birth_of_date":"1987-05-04T00:00:00Z","email":"satria.prayoga@gmail.com","telp":"","user_id":1,"user_name":"gsprayoga"}}

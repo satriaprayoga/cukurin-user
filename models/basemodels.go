@@ -22,6 +22,11 @@ type ParamList struct {
 	SortField  string `json:"sort_field,omitempty"`
 }
 
+type ParamListGeo struct {
+	GeoBarber
+	ParamList
+}
+
 // ResponseModelList :
 type ResponseModelList struct {
 	Page         int         `json:"page"`

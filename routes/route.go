@@ -17,10 +17,7 @@ type AppRoutes struct {
 
 func (a *AppRoutes) Setup() {
 	timeoutContext := time.Duration(settings.AppConfigSetting.Server.ReadTimeOut) * time.Second
-
 	repoKUser := repo.NewRepoKUser(database.Conn)
-	//serviceKUser := services.NewKUserService(repoKUser,timeoutContext)
-	//repoKSession := repo.NewRepoKSession(database.Conn)
 
 	authService := services.NewAuthService(repoKUser, timeoutContext)
 	controllers.NewAuthController(a.E, authService)
